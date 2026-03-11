@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>पवार कृषी केंद्र - वानिचिंचोले</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: green;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+section {
+    padding: 20px;
+}
+
+.products {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+button {
+    background-color: green;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkgreen;
+}
+
+footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>पवार कृषी केंद्र</h1>
+    <p>वानिचिंचोले</p>
+</header>
+
+<section>
+    <h2>आमच्याबद्दल</h2>
+    <p>पवार कृषी केंद्र येथे सर्व प्रकारची शेतीसाठी लागणारी औषधे, बियाणे व खते उपलब्ध आहेत.</p>
+</section>
+
+<section class="products">
+    <h2>उपलब्ध उत्पादने</h2>
+    <ul>
+        <li>🌾 बियाणे</li>
+        <li>🌱 खते</li>
+        <li>🧴 कीटकनाशके</li>
+        <li>🚜 शेती औजारे</li>
+    </ul>
+</section>
+
+<section>
+    <h2>ऑर्डर करा</h2>
+
+    <form action="mailto:owner@email.com" method="post" enctype="text/plain">
+        
+        नाव:<br>
+        <input type="text" name="नाव" required><br><br>
+
+        मोबाईल नंबर:<br>
+        <input type="tel" name="मोबाईल" required><br><br>
+
+        उत्पादन निवडा:<br>
+        <select name="उत्पादन">
+            <option>बियाणे</option>
+            <option>खते</option>
+            <option>कीटकनाशके</option>
+            <option>शेती औजारे</option>
+        </select><br><br>
+
+        प्रमाण:<br>
+        <input type="text" name="प्रमाण"><br><br>
+
+        <button type="submit">ऑर्डर पाठवा</button>
+
+    </form>
+</section>
+
+<footer>
+    <p>संपर्क: ९८७६५४३२१०</p>
+    <p>© २०२६ पवार कृषी केंद्र</p>
+</footer>
+
+</body>
+</html>

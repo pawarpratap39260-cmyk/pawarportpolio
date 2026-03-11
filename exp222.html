@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF Duplicate - HTML Edition</title>
+    <style>
+        body { margin: 0; background: #1a1a1a; color: white; font-family: sans-serif; overflow: hidden; }
+        canvas { display: block; background: #4CAF50; margin: 0 auto; border: 5px solid #333; }
+        .ui { position: absolute; top: 10px; left: 10px; pointer-events: none; }
+        .skill-btn { position: absolute; bottom: 20px; right: 20px; padding: 15px; background: orange; border-radius: 50%; font-weight: bold; border: 4px solid white; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="ui">
+    <h1>FF Clone: HTML</h1>
+    <p>Move: WASD | Aim/Shoot: Mouse Click</p>
+    <p>Health: <span id="hp">100</span></p>
+    <p>Active Skill: <b>"Speed Dash" (Press Q)</b></p>
+</div>
+
+<div id="skillIcon" class="skill-btn">Q</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Game State
+let player = {
+    x: 100, y: 100,
+    size: 30,
+    color: '#3498db',
+    speed: 4,
+    hp: 100,
+    skillActive: false,
+    skillCooldown: false
+};
+
+let bullets = [];
+let enemies = [{ x: 500, y: 300, size: 30, color: 'red', hp: 50 }];
+let keys = {};
+
+// Handle Input
+window.addEventListener('keydown', e => { 
+    keys[e.key.toLowerCase()] = true;
+    if (e.key.toLowerCase() === 'q') activateSkill();
+});
+window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+window.addEventListener('mousedown', shoot);
+
+// --- CHARACTER SKILL ---
+function activateSkill() {
+    if (!player.skillCooldown) {
+        player.skillActive = true;
+        player.speed = 10; // Double speed (Speed Dash)
+        player.color = "yellow";
+        
+        // Skill duration: 2 seconds
+        setTimeout(() => {
+            player.skillActive = false;
+            player.speed = 4;
+            player.color = '#3498db';
+            player.skillCooldown = true;
+            document.getElementById('skillIcon').style.opacity = "0.3";
+            
+            // Cooldown: 5 seconds
+            setTimeout(() => {
+                player.skillCooldown = false;
+                document.getElementById('skillIcon').style.opacity = "1";
+            }, 5000);
+        }, 2000);
+    }
+}
+
+function shoot(e) {
+    const angle = Math.atan2(e.clientY - player.y, e.clientX - player.x);
+    bullets.push({ x: player.x, y: player.y, angle: angle, speed: 10 });
+}
+
+function update() {
+    // Movement
+    if (keys['w']) player.y -= player.speed;
+    if (keys['s']) player.y += player.speed;
+    if (keys['a']) player.x -= player.speed;
+    if (keys['d']) player.x += player.speed;
+
+    // Bullet Logic
+    bullets.forEach((b, index) => {
+        b.x += Math.cos(b.angle) * b.speed;
+        b.y += Math.sin(b.angle) * b.speed;
+        
+        // Collision Detection
+        enemies.forEach(en => {
+            if (Math.hypot(b.x - en.x, b.y - en.y) < en.size) {
+                en.hp -= 10;
+                bullets.splice(index, 1);
+            }
+        });
+    });
+
+    // Remove dead enemies
+    enemies = enemies.filter(en => en.hp > 0);
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw Player
+    ctx.fillStyle = player.color;
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw Enemies
+    enemies.forEach(en => {
+        ctx.fillStyle = en.color;
+        ctx.fillRect(en.x - en.size/2, en.y - en.size/2, en.size, en.size);
+    });
+
+    // Draw Bullets
+    ctx.fillStyle = "white";
+    bullets.forEach(b => {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    document.getElementById('hp').innerText = player.hp;
+    requestAnimationFrame(() => { update(); draw(); });
+}
+
+draw();
+</script>
+</body>
+</html>
